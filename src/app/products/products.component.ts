@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from '../model/product';
 import { ProductService } from '../services/product.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { ProductService } from '../services/product.service';
 })
 export class ProductsComponent implements OnInit {
  
-  public products : any;  
+  public products! : Array<Product>;  
 
   public index! : number;
 
@@ -17,29 +18,64 @@ export class ProductsComponent implements OnInit {
   constructor(private _productService : ProductService) { }
 
   ngOnInit(): void {
-      this._productService.getAllProducts().subscribe({
+    //   this._productService.getAllProducts().subscribe({
 
-      // 1- Première étapes si tout ce passe bien et que les données arrivent
-      next: (data =>{
-        this.products=data;
-      }) ,
+    //   // 1- Première étapes si tout ce passe bien et que les données arrivent
+    //   next: (data =>{
+    //     this.products=data;
+    //   }) ,
        
-      //Dans le cas echéant
-      error :(errors=>{
-           this.errorMessage = errors;
-      })
+    //   //Dans le cas echéant
+    //   error :(errors=>{
+    //        this.errorMessage = errors;
+    //   })
 
 
-    });
+    // });
+
+    this.handleGetAllProduct();
+
   }
+
+ 
+  // getAllProduct
+
+  handleGetAllProduct(){
+ 
+    this._productService.getAllProducts().subscribe({
+
+          next: (data =>{
+                          this.products=data;
+                         }) ,error :( errors=> {                            
+                              
+                          this.errorMessage = errors;})
+                                                                            
+      });
+  };
+
 
   //Delete 
 
-  handleDeleteProducts(item: any){
+  handleDeleteProducts(item: Product){
     
-    this.index = this.products.indexOf(item);
+   let conf=confirm("Are you sure?")
+   if(conf==false) return;
 
-    this.products.splice(this.index,1);
+    this._productService.deleteProduct(item.id).subscribe({
+      next: (data=>{
+
+         //this.handleGetAllProduct();
+
+       this.index = this.products.indexOf(item);
+
+        this.products.splice(this.index,1);
+      })
+    })
+    
+    
+   // this.index = this.products.indexOf(item);
+
+    //this.products.splice(this.index,1);
 
   }
 
