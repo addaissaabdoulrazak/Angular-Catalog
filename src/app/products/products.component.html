@@ -1,5 +1,13 @@
 <br>
-<div class="container">
+<ng-template #IdError>
+    <div class="text-danger">{{errorMessage}}</div>
+</ng-template>
+
+ <!-- --nous allons jonglet a ce stade << si products contient les données on les affiches sinon on affiche l'erreur ci-dessus  -->
+
+ <!-- --sachez que vous ne pouvez pas utilisé deux ngIf a savoir 1 dans ng-template et 1 dans le div.class -->
+
+<div class="container" *ngIf="products; else IdError">
     <div class="card text-center">
       <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
