@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Product } from '../model/product';
 import { ProductService } from '../services/product.service';
 
@@ -15,7 +16,20 @@ export class ProductsComponent implements OnInit {
 
   errorMessage! : string;
 
-  constructor(private _productService : ProductService) { }
+  searchFormGroup! : FormGroup;
+
+  //pagination 
+
+  currentPage = 0;
+  
+  pageSize: number = 5 ;
+
+  totalPages :number =0 ;
+
+
+
+
+  constructor(private _productService : ProductService, private fb : FormBuilder) { }
 
   ngOnInit(): void {
     //   this._productService.getAllProducts().subscribe({
@@ -33,8 +47,19 @@ export class ProductsComponent implements OnInit {
 
     // });
 
-    this.handleGetAllProduct();
+    
 
+    this.searchFormGroup =this.fb.group(
+      {
+       
+        // we have a key/value system (attribut/valeur ou propriété/value) because it's an Object =>  {}
+        keyword: this.fb.control(null), 
+      }
+
+    )
+      
+    //this.handleGetAllProduct();
+    this.handleGetPageProduct();
   }
 
  
@@ -42,21 +67,27 @@ export class ProductsComponent implements OnInit {
 
   handleGetAllProduct(){
  
-    this._productService.getAllProducts().subscribe({
+    this._productService.getAllProducts().subscribe(
+      {
 
-          next: (data =>{
-                          this.products=data;
-                         }) ,error :( errors=> {                            
-                              
-                          this.errorMessage = errors;})
+        next: (data=>{
+          this.products=data;          // it's possible to write next(data){ this.products=data}
+        }),
+
+        error : (err=>{
+          this.errorMessage = err;
+        })
+
                                                                             
-      });
+      }
+      
+    );
   };
 
 
   //Delete 
 
-  handleDeleteProducts(item: Product){
+  handleDeleteProducts(item: Product):void{
     
    let conf=confirm("Are you sure?")
    if(conf==false) return;
@@ -77,6 +108,64 @@ export class ProductsComponent implements OnInit {
 
     //this.products.splice(this.index,1);
 
+  }
+
+
+  //->Active/Desactive Promotion
+
+  handleSetPromotion(product: Product){
+     let promo = ! product.promotion;
+    this._productService.setProduct(product.id).subscribe({
+      next: (bool) =>{
+         //console.log("Ok");
+        product.promotion=promo;
+      },
+      error : boolFalse =>{
+        this.errorMessage =boolFalse; 
+      }
+    })
+  }
+
+  //Formulaire Management
+
+  handleSearchProduct(){
+
+     let keyWord =this.searchFormGroup.value.keyword;
+     this._productService.searchProduct(keyWord).subscribe({
+      next:(data)=>{
+        this.products =data
+      }
+     });
+  }
+
+
+  //Get PageProduct
+
+  handleGetPageProduct(){
+ 
+    this._productService.getPageProducts(this.pageSize,this.currentPage).subscribe(
+      {
+
+        next: (data=>{
+            this.products =data.products;  
+            this.totalPages =data.totalPages;   
+        }),
+
+        error : (err=>{
+          this.errorMessage = err;
+        })
+
+                                                                            
+      }
+      
+    );
+  };
+
+  //Go to the new pages
+  goToPages(i:number)
+  {
+     this.currentPage = i;
+     this.handleGetPageProduct();
   }
 
 }
