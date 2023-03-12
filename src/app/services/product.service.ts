@@ -121,12 +121,36 @@ public setProduct(id: string): Observable<boolean> {
 
 
 }
+ //---------------------------------[Search produit]------------------------------------------
 
-  searchProduct(keyWord: string): Observable<Product[]> {
+  searchProduct(keyWord: string, size: number,currentPage:number ): Observable<pageProduct> {
 
-    let products = this.products.filter(p=>p.name.includes(keyWord));
+  let searchResult = this.products.filter(p=>p.name.includes(keyWord));
+    
+   let index = size * currentPage ;
+   
+   // ici tatalPages se base sur notre tableau filter par rapport a la recherche effectuer(searchResult)
+   let totalPages = ~~ (searchResult.length/size); 
 
-    return of(products);
+   if(this.products.length%size !=0)  
+
+   totalPages++;
+
+
+   let actualPageProducts = this.products.slice(index, index+size);
+
+    return of(
+    {
+      totalPages:totalPages,
+
+      currentPage:currentPage,
+       
+      size : size,
+
+      products : actualPageProducts
+     }
+     
+    );
 
 }
 
@@ -135,7 +159,10 @@ public setProduct(id: string): Observable<boolean> {
 
 getPageProducts(size: number, currentPage:number) : Observable<pageProduct> {
   
-   let indexd = size * currentPage ;
+
+  // cette variable index ne sert qu'a obtenir le new tableau actualPageProducts
+    
+   let index = size * currentPage ;
    
    //tilde for entier division
    let totalPages = ~~ (this.products.length/size); 
@@ -145,9 +172,11 @@ getPageProducts(size: number, currentPage:number) : Observable<pageProduct> {
    totalPages++;
   
    //1-nous allons appliquer une certain restriction sur le tableau global afin d'Obtenir. 
-     //2- un nouveau élements/une partie du tableau global(PagesProducts).
+     //2- un nouveau élements/une partie du tableau global(actualPageProducts).
+       //3- l'obtension du nouveau tableau(actualPageProducts) dépend de l'index calculer ci-dessus
+         //4- supposons que index = 5 donc nous obtiendrons un produit partant de 5 à 10
 
-   let actualPageProducts = this.products.slice(indexd, indexd+size);
+   let actualPageProducts = this.products.slice(index, index+size);
     
    //1-nous devons retourner la pageProducts etant données que celle-ci est une Interface nous ne pouvons pas l'instancier
      //2-donc nous allons optez pour l'utilisation de la notion d'objet => {} .

@@ -88,6 +88,7 @@
                         </tfoot>
                 </table>
                 <!-- gestion Pagination -->
+                   <!-- la variable TotalPages ne concerne que les lien de navigation -->
                 <ul class="nav nav-pills">
                   <li *ngFor="let item  of [].constructor(totalPages); let i=index">
                     <a [ngClass]="i==currentPage?'btn-primary':'btn-outline-primary'" class="btn  ms-1 mt-1" (click)="goToPages(i)">{{i}}</a>

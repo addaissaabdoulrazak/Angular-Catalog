@@ -26,6 +26,9 @@ export class ProductsComponent implements OnInit {
 
   totalPages :number =0 ;
 
+  //technique
+   currentAction:string ="All";
+
 
 
 
@@ -63,7 +66,7 @@ export class ProductsComponent implements OnInit {
   }
 
  
-  // getAllProduct
+  // --------------------------------------------------[getAllProduct]-----------------------------------------------------
 
   handleGetAllProduct(){
  
@@ -85,7 +88,7 @@ export class ProductsComponent implements OnInit {
   };
 
 
-  //Delete 
+  //-----------------------------------------------[Delete]-------------------------------------------------------
 
   handleDeleteProducts(item: Product):void{
     
@@ -111,7 +114,7 @@ export class ProductsComponent implements OnInit {
   }
 
 
-  //->Active/Desactive Promotion
+  //------------------------------[Active/Desactive Promotion]--------------------------------------
 
   handleSetPromotion(product: Product){
      let promo = ! product.promotion;
@@ -126,26 +129,28 @@ export class ProductsComponent implements OnInit {
     })
   }
 
-  //Formulaire Management
+  //---------------------------------[Formulaire Management/ search produit]---------------------------------------------------------
 
   handleSearchProduct(){
-
+         this.currentAction ="search"
+         this.currentPage=0;
      let keyWord =this.searchFormGroup.value.keyword;
-     this._productService.searchProduct(keyWord).subscribe({
+     this._productService.searchProduct(keyWord,this.pageSize,this.currentPage).subscribe({
       next:(data)=>{
-        this.products =data
+        this.products =data.products
+        this.totalPages=data.totalPages
       }
      });
   }
 
 
-  //Get PageProduct
+  //---------------------------------------------[Get PageProduct/navigation management]----------------------------------------------
 
   handleGetPageProduct(){
  
     this._productService.getPageProducts(this.pageSize,this.currentPage).subscribe(
       {
-
+       
         next: (data=>{
             this.products =data.products;  
             this.totalPages =data.totalPages;   
@@ -161,11 +166,15 @@ export class ProductsComponent implements OnInit {
     );
   };
 
-  //Go to the new pages
+  //---------------------------------------------[Go to the next pages]--------------------------------------------
   goToPages(i:number)
   {
+ 
      this.currentPage = i;
+     if(this.currentAction=="All")
      this.handleGetPageProduct();
+
+     else this.handleSearchProduct();
   }
 
 }
