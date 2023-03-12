@@ -133,7 +133,7 @@ export class ProductsComponent implements OnInit {
 
   handleSearchProduct(){
          this.currentAction ="search"
-         this.currentPage=0;
+   
      let keyWord =this.searchFormGroup.value.keyword;
      this._productService.searchProduct(keyWord,this.pageSize,this.currentPage).subscribe({
       next:(data)=>{
@@ -169,7 +169,7 @@ export class ProductsComponent implements OnInit {
   //---------------------------------------------[Go to the next pages]--------------------------------------------
   goToPages(i:number)
   {
- 
+    this.currentPage=0;
      this.currentPage = i;
      if(this.currentAction=="All")
      this.handleGetPageProduct();
