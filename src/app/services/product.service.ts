@@ -175,7 +175,8 @@ getPageProducts(size: number, currentPage:number) : Observable<pageProduct> {
      //2- un nouveau élements/une partie du tableau global(actualPageProducts).
        //3- l'obtension du nouveau tableau(actualPageProducts) dépend de l'index calculer ci-dessus
          //4- supposons que index = 5 donc nous obtiendrons un produit partant de 5 à 10
-
+           
+          //slice veut dire obtenir une trache, une partie bien delimité
    let actualPageProducts = this.products.slice(index, index+size);
     
    //1-nous devons retourner la pageProducts etant données que celle-ci est une Interface nous ne pouvons pas l'instancier
