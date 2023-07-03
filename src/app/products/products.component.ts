@@ -132,10 +132,10 @@ export class ProductsComponent implements OnInit {
   //---------------------------------[Formulaire Management/ search produit]---------------------------------------------------------
 
   handleSearchProduct(){
-         this.currentAction ="search"
-   
-     let keyWord =this.searchFormGroup.value.keyword;
-     this._productService.searchProduct(keyWord,this.pageSize,this.currentPage).subscribe({
+    
+    this.currentAction ="search"   
+    let keyWord =this.searchFormGroup.value.keyword;
+    this._productService.searchProduct(keyWord,this.pageSize,this.currentPage).subscribe({
       next:(data)=>{
         this.products =data.products
         this.totalPages=data.totalPages

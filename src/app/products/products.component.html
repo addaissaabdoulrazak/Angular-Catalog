@@ -67,6 +67,11 @@
                                 <td scope="row">{{product.id}}</td>
                                 <td>{{product.name}}</td>
                                 <td>{{product.price}}</td>
+
+                                <!-- 
+                                  Ce qu'il faut savoir : ngIf permet de supprimer ou de recréer l'élément courant suivant l'expression passée en paramètre.
+                                ------------------------ 
+                                -->
                                 <td> <i *ngIf="product.promotion ==true " class="bi bi-heart-fill text-success"></i></td>
 
                                 <td>

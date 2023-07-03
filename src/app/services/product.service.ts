@@ -7,7 +7,7 @@ import { Product, pageProduct } from '../model/product';
 
 @Injectable({
   providedIn: 'root'
-})
+}) 
 export class ProductService {
 
   products! : Array<Product>
